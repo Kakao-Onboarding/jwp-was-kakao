@@ -6,7 +6,7 @@ public class HttpResponse {
     private HttpStatus status;
     private String version;
     private Map<String, String> headers;
-    private String body;
+    private byte[] body;
 
     public HttpStatus getStatus() {
         return status;
@@ -20,7 +20,7 @@ public class HttpResponse {
         return headers;
     }
 
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
 
@@ -28,7 +28,7 @@ public class HttpResponse {
         private HttpStatus status;
         private String version;
         private Map<String, String> headers;
-        private String body;
+        private byte[] body;
 
         private HttpResponseBuilder() {
         }
@@ -52,7 +52,7 @@ public class HttpResponse {
             return this;
         }
 
-        public HttpResponseBuilder withBody(String body) {
+        public HttpResponseBuilder withBody(byte[] body) {
             this.body = body;
             return this;
         }
