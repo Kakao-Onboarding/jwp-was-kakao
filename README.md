@@ -16,8 +16,8 @@
 
 ## HTTP 웹 서버 구현하기
 **[1. GET /index.html 응답하기]**
-- [ ] 클라이언트는 http://localhost:8080/index.html 에 접근할 수 있어야한다
-- [ ] RequestHandlerTest가 모두 통과해야한다
+- [x] 클라이언트는 http://localhost:8080/index.html 에 접근할 수 있어야한다
+- [x] RequestHandlerTest가 모두 통과해야한다
 
 **[2. CSS 지원하기]**
 - [ ] Stylesheet 파일을 응답할 수 있도록 한다
