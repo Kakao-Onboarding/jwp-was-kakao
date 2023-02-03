@@ -35,6 +35,8 @@ public class Request {
                 .collect(Collectors.toMap(keyValuePair -> keyValuePair[0], keyValuePair -> keyValuePair[1], (a, b) -> b));
     }
 
+    // TODO: getRequestBody() 구현하기 (returns Map<String, String>)
+
     public FileType findRequestedFileType() {
         String path = getPath();
         String[] split = path.split("\\.");
