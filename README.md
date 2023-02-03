@@ -23,11 +23,11 @@
 - [x] Stylesheet 파일을 응답할 수 있도록 한다
 
 **[3. Query String 파싱]**
-- [ ] http://localhost:8080/user/form.html 에서 회원 가입을 할 수 있다
-  - [ ] GET http://localhost:8080/user/create?userId=id&password=pw&name=name&email=email 형식으로 요청이 발생한다
-  - [ ] 쿼리 스트링 형태로 회원 가입 정보가 넘어온다
-  - [ ] 사용자가 입력한 값을 파싱해 model.User 클래스에 저장한다
-  - [ ] User를 DataBase에 저장한다
+- [x] http://localhost:8080/user/form.html 에서 회원 가입을 할 수 있다
+  - [x] GET http://localhost:8080/user/create?userId=id&password=pw&name=name&email=email 형식으로 요청이 발생한다
+  - [x] 쿼리 스트링 형태로 회원 가입 정보가 넘어온다
+  - [x] 사용자가 입력한 값을 파싱해 model.User 클래스에 저장한다
+  - [x] User를 DataBase에 저장한다
 
 **[4. POST 방식으로 회원가입 리팩터링]**
 - [ ] 회원 가입을 GET 방식에서 POST 방식으로 리팩터링

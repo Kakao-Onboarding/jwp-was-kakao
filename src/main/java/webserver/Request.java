@@ -2,9 +2,8 @@ package webserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Request {
     private final List<String> requestLines;
@@ -24,7 +23,16 @@ public class Request {
 
     public String getPath() {
         String[] firstRequestLine = requestLines.get(0).split(" ");
-        return firstRequestLine[1];
+        return firstRequestLine[1].split("\\?")[0];
+    }
+
+    public Map<String, String> getQueryString() {
+        String[] firstRequestLine = requestLines.get(0).split(" ");
+        String queryString = firstRequestLine[1].split("\\?")[1];
+
+        return Arrays.stream(queryString.split("&"))
+                .map(s -> s.split("="))
+                .collect(Collectors.toMap(keyValuePair -> keyValuePair[0], keyValuePair -> keyValuePair[1], (a, b) -> b));
     }
 
     public FileType findRequestedFileType() {
