@@ -33,4 +33,9 @@ public class Request {
         String fileExtension = split[split.length - 1];
         return FileType.findType(fileExtension);
     }
+
+    public Method getMethod() {
+        String[] firstRequestLine = requestLines.get(0).split(" ");
+        return Method.of(firstRequestLine[0]);
+    }
 }

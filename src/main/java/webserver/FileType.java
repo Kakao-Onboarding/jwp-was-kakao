@@ -7,7 +7,7 @@ public enum FileType {
     CSS("text/css", "css"),
     JS("application/javascript", "js"),
     ICO("image/x-icon", "ico"),
-    OTHER("text/html", "");
+    HANDLER("text/html", "");
 
     private final String contentType;
     private final String fileExtension;
@@ -21,7 +21,7 @@ public enum FileType {
         return Arrays.stream(values())
                 .filter(fileType -> fileType.fileExtension.equalsIgnoreCase(extension))
                 .findAny()
-                .orElse(OTHER);
+                .orElse(HANDLER);
     }
 
     public String getContentType() {

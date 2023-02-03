@@ -32,9 +32,9 @@ public class RequestHandler implements Runnable {
              ) {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             Request request = Request.parse(reader);
-            String path = request.getPath();
+
             FileType fileType = request.findRequestedFileType();
-            byte[] body = findResponseByPath(path, fileType);
+            byte[] body = findResponseByPath(request, fileType);
 
             DataOutputStream dos = new DataOutputStream(out);
             response200Header(dos, body.length, fileType);
@@ -44,14 +44,15 @@ public class RequestHandler implements Runnable {
         }
     }
 
-    private byte[] findResponseByPath(String path, FileType fileType) throws IOException, URISyntaxException {
-        if (fileType == FileType.HTML) {
+    private byte[] findResponseByPath(Request request, FileType fileType) throws IOException, URISyntaxException {
+        String path = request.getPath();
+        if (fileType == FileType.HTML || fileType == FileType.ICO) {
             return FileIoUtils.loadFileFromClasspath("./templates" + path);
         }
         if (fileType == FileType.CSS || fileType == FileType.JS) {
             return FileIoUtils.loadFileFromClasspath("./static" + path);
         }
-        return "Hello world".getBytes();
+        return HandlerMapping.handle(request);
     }
 
     private void response200Header(DataOutputStream dos, int lengthOfBodyContent, FileType fileType) {
