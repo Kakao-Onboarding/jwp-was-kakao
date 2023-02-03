@@ -2,6 +2,7 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.PathVariable;
 import utils.FileIoUtils;
 
 import java.io.*;
@@ -32,27 +33,31 @@ public class RequestHandler implements Runnable {
             // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             Request request = Request.parse(reader);
             String path = request.getPath();
-            System.out.println(path);
-
-            byte[] body;
-            if ("/".equals(path)) {
-                body = "Hello world".getBytes();
-            } else {
-                body = FileIoUtils.loadFileFromClasspath("./templates" + path);
-            }
+            FileType fileType = request.findRequestedFileType();
+            byte[] body = findResponseByPath(path, fileType);
 
             DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length);
+            response200Header(dos, body.length, fileType);
             responseBody(dos, body);
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
+    private byte[] findResponseByPath(String path, FileType fileType) throws IOException, URISyntaxException {
+        if (fileType == FileType.HTML) {
+            return FileIoUtils.loadFileFromClasspath("./templates" + path);
+        }
+        if (fileType == FileType.CSS || fileType == FileType.JS) {
+            return FileIoUtils.loadFileFromClasspath("./static" + path);
+        }
+        return "Hello world".getBytes();
+    }
+
+    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, FileType fileType) {
         try {
             dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8 \r\n");
+            dos.writeBytes("Content-Type: " + fileType.getContentType() + ";charset=utf-8 \r\n");
             dos.writeBytes("Content-Length: " + lengthOfBodyContent + " \r\n");
             dos.writeBytes("\r\n");
         } catch (IOException e) {

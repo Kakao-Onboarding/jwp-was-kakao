@@ -26,4 +26,11 @@ public class Request {
         String[] firstRequestLine = requestLines.get(0).split(" ");
         return firstRequestLine[1];
     }
+
+    public FileType findRequestedFileType() {
+        String path = getPath();
+        String[] split = path.split("\\.");
+        String fileExtension = split[split.length - 1];
+        return FileType.findType(fileExtension);
+    }
 }

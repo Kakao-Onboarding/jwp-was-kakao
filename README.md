@@ -20,7 +20,7 @@
 - [x] RequestHandlerTest가 모두 통과해야한다
 
 **[2. CSS 지원하기]**
-- [ ] Stylesheet 파일을 응답할 수 있도록 한다
+- [x] Stylesheet 파일을 응답할 수 있도록 한다
 
 **[3. Query String 파싱]**
 - [ ] http://localhost:8080/user/form.html 에서 회원 가입을 할 수 있다
