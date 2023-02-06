@@ -6,7 +6,8 @@ import webserver.response.Response;
 
 import java.util.Arrays;
 
-import static webserver.request.Method.*;
+import static webserver.request.Method.GET;
+import static webserver.request.Method.POST;
 
 public enum HandlerMapping {
 

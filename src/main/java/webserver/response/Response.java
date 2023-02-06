@@ -47,9 +47,9 @@ public class Response {
     }
 
     public void flush(DataOutputStream dos) throws IOException {
-        dos.writeBytes("HTTP/1.1 " +  statusCode.getCode() + " "  + statusCode.getMessage() + "\r\n");
+        dos.writeBytes("HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getMessage() + "\r\n");
         for (Map.Entry<String, String> entry : responseHeader.entrySet()) {
-            dos.writeBytes(entry.getKey() + ": "+ entry.getValue() + "\r\n");
+            dos.writeBytes(entry.getKey() + ": " + entry.getValue() + "\r\n");
         }
         dos.writeBytes("\r\n");
         dos.write(body, 0, body.length);

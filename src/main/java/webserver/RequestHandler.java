@@ -28,7 +28,7 @@ public class RequestHandler implements Runnable {
                 InputStream in = connection.getInputStream();
                 OutputStream out = connection.getOutputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in))
-             ) {
+        ) {
             Request request = Request.parse(reader);
             Response response = findResponseByPath(request);
             response.flush(new DataOutputStream(out));

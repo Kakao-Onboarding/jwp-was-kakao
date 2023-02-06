@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataBase {
-    private static Map<String, User> users = new HashMap<>();
+    private static final Map<String, User> users = new HashMap<>();
 
     public static void addUser(User user) {
         users.put(user.getUserId(), user);
