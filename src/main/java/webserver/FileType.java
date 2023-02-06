@@ -7,7 +7,12 @@ public enum FileType {
     CSS("text/css", "css"),
     JS("application/javascript", "js"),
     ICO("image/x-icon", "ico"),
-    HANDLER("text/html", "");
+    HANDLER("text/html", ""),
+    EOT("application/font-eot", "eot"),
+    SVG("application/font-svg", "svg"),
+    TTF("application/font-ttf", "ttf"),
+    WOFF("application/font-woff", "woff"),
+    WOFF2("application/font-woff2", "woff2");
 
     private final String contentType;
     private final String fileExtension;
@@ -26,5 +31,9 @@ public enum FileType {
 
     public String getContentType() {
         return contentType;
+    }
+
+    public boolean isFont() {
+        return this.equals(EOT) || this.equals(SVG) || this.equals(TTF) || this.equals(WOFF) || this.equals(WOFF2);
     }
 }

@@ -49,7 +49,7 @@ public class RequestHandler implements Runnable {
         if (fileType == FileType.HTML || fileType == FileType.ICO) {
             return FileIoUtils.loadFileFromClasspath("./templates" + path);
         }
-        if (fileType == FileType.CSS || fileType == FileType.JS) {
+        if (fileType == FileType.CSS || fileType == FileType.JS || fileType.isFont()) {
             return FileIoUtils.loadFileFromClasspath("./static" + path);
         }
         return HandlerMapping.handle(request);
