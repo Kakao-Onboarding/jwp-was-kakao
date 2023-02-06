@@ -5,6 +5,7 @@ import webserver.FileType;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Response {
@@ -38,8 +39,8 @@ public class Response {
     }
 
     private static Map<String, String> generateResponseHeader(byte[] body, FileType fileType) {
-        Map<String, String> responseHeader = new HashMap<>();
-        responseHeader.put("Content-Type", fileType.getContentType() + " ;charset=utf-8");
+        Map<String, String> responseHeader = new LinkedHashMap<>();
+        responseHeader.put("Content-Type", fileType.getContentType() + ";charset=utf-8");
         if (body.length > 0) {
             responseHeader.put("Content-Length", String.valueOf(body.length));
         }
@@ -47,9 +48,9 @@ public class Response {
     }
 
     public void flush(DataOutputStream dos) throws IOException {
-        dos.writeBytes("HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getMessage() + "\r\n");
+        dos.writeBytes("HTTP/1.1 " + statusCode.getCode() + " " + statusCode.getMessage() + " \r\n");
         for (Map.Entry<String, String> entry : responseHeader.entrySet()) {
-            dos.writeBytes(entry.getKey() + ": " + entry.getValue() + "\r\n");
+            dos.writeBytes(entry.getKey() + ": " + entry.getValue() + " \r\n");
         }
         dos.writeBytes("\r\n");
         dos.write(body, 0, body.length);
