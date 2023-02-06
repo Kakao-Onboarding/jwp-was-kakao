@@ -1,7 +1,9 @@
-package webserver;
+package webserver.handler;
 
 import db.DataBase;
 import model.User;
+import webserver.request.Request;
+import webserver.response.Response;
 
 import java.util.Map;
 

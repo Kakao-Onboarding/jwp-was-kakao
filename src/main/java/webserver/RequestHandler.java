@@ -2,15 +2,14 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
 import utils.FileIoUtils;
+import webserver.handler.HandlerMapping;
+import webserver.request.Request;
+import webserver.response.Response;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);

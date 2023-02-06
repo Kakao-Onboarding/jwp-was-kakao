@@ -1,4 +1,7 @@
-package webserver;
+package webserver.handler;
+
+import webserver.request.Request;
+import webserver.response.Response;
 
 public class BaseHandler implements Handler {
     @Override

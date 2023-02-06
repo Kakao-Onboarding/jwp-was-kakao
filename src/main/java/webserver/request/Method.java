@@ -1,8 +1,8 @@
-package webserver;
+package webserver.request;
 
 import java.util.Arrays;
 
-enum Method {
+public enum Method {
     GET, POST, PUT, DELETE;
 
     public static Method of(String input) {
