@@ -30,8 +30,8 @@
   - [x] User를 DataBase에 저장한다
 
 **[4. POST 방식으로 회원가입 리팩터링]**
-- [ ] 회원 가입을 GET 방식에서 POST 방식으로 리팩터링
-  - [ ] Request Body에 담긴 내용을 추출하여 User 클래스를 생성한다
+- [x] 회원 가입을 GET 방식에서 POST 방식으로 리팩터링
+  - [x] Request Body에 담긴 내용을 추출하여 User 클래스를 생성한다
 
 **[5. Redirect]**
 - [ ] 회원 가입 완료 후 index.html로 이동한다

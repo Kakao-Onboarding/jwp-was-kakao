@@ -8,8 +8,7 @@ import java.util.Map;
 public class CreateUserHandler implements Handler {
     @Override
     public byte[] apply(Request request) {
-        // TODO: getRequestBody() 로 변경
-        Map<String, String> queryString = request.getQueryString();
+        Map<String, String> queryString = request.getRequestBody();
         User user = new User(
                 queryString.get("userId"),
                 queryString.get("password"),

@@ -7,7 +7,8 @@ import static webserver.Method.*;
 public enum HandlerMapping {
 
     BASE_URL(GET, "/", new BaseHandler()),
-    CREATE_USER(GET, "/user/create", new CreateUserHandler());
+    CREATE_USER(GET, "/user/create", new CreateUserHandler()),
+    CREATE_USER_2(POST, "/user/create", new CreateUserHandler());
 
     private final Method method;
     private final String path;

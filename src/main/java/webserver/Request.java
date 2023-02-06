@@ -1,41 +1,91 @@
 package webserver;
 
+import utils.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Request {
-    private final List<String> requestLines;
 
-    private Request(List<String> requestLines) {
-        this.requestLines = requestLines;
+    private final Method method;
+    private final String url;
+    private final String protocol;
+    private final Map<String, String> requestHeader;
+    private final String requestBody;
+
+    private Request(Method method, String url, String protocol, Map<String, String> requestHeader, String requestBody) {
+        this.method = method;
+        this.url = url;
+        this.protocol = protocol;
+        this.requestHeader = requestHeader;
+        this.requestBody = requestBody;
     }
 
     public static Request parse(BufferedReader reader) throws IOException {
-        List<String> requestLines = new ArrayList<>();
-        String line;
-        while (!Objects.equals(line = reader.readLine(), "")) {
-            requestLines.add(line);
+        String firstLine = reader.readLine();
+        Method method = parseMethod(firstLine);
+        String url = parseUrl(firstLine);
+        String protocol = parseProtocol(firstLine);
+
+        Map<String, String> requestHeader = parseHeader(reader);
+        String requestBody = parseBody(reader, requestHeader);
+
+        return new Request(method, url, protocol, requestHeader, requestBody);
+    }
+
+    private static Method parseMethod(String firstLine) {
+        return Method.of(firstLine.split(" ")[0]);
+    }
+
+    private static String parseUrl(String firstLine) {
+        return firstLine.split(" ")[1];
+    }
+
+    private static String parseProtocol(String firstLine) {
+        return firstLine.split(" ")[2];
+    }
+
+    private static Map<String, String> parseHeader(BufferedReader reader) throws IOException {
+        Map<String, String> requestHeader = new HashMap<>();
+        String header;
+        while (!Objects.equals(header = reader.readLine(), "")) {
+            String[] headerInformation = header.split(":");
+            requestHeader.put(headerInformation[0].trim(), headerInformation[1].trim());
         }
-        return new Request(requestLines);
+        return requestHeader;
+    }
+
+    private static String parseBody(BufferedReader reader, Map<String, String> requestHeader) throws IOException {
+        if (requestHeader.containsKey("Content-Length")) {
+            int contentLength = Integer.parseInt(requestHeader.get("Content-Length"));
+            return IOUtils.readData(reader, contentLength);
+        }
+        return "";
     }
 
     public String getPath() {
-        String[] firstRequestLine = requestLines.get(0).split(" ");
-        return firstRequestLine[1].split("\\?")[0];
+        return url.split("\\?")[0];
     }
 
     public Map<String, String> getQueryString() {
-        String[] firstRequestLine = requestLines.get(0).split(" ");
-        String queryString = firstRequestLine[1].split("\\?")[1];
+        String[] splitUrl = url.split("\\?");
+        if (splitUrl.length == 1) {
+            return new HashMap<>();
+        }
+        return parseQueryStringFormat(splitUrl[1]);
+    }
 
-        return Arrays.stream(queryString.split("&"))
+    private Map<String, String> parseQueryStringFormat(String input) {
+        return Arrays.stream(input.split("&"))
                 .map(s -> s.split("="))
                 .collect(Collectors.toMap(keyValuePair -> keyValuePair[0], keyValuePair -> keyValuePair[1], (a, b) -> b));
     }
 
-    // TODO: getRequestBody() 구현하기 (returns Map<String, String>)
+    public Map<String, String> getRequestBody() {
+        return parseQueryStringFormat(requestBody);
+    }
 
     public FileType findRequestedFileType() {
         String path = getPath();
@@ -45,7 +95,6 @@ public class Request {
     }
 
     public Method getMethod() {
-        String[] firstRequestLine = requestLines.get(0).split(" ");
-        return Method.of(firstRequestLine[0]);
+        return method;
     }
 }
