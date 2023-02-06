@@ -36,6 +36,10 @@ public class HttpRequest {
         return body;
     }
 
+    public void setBody(String body) {
+        this.body = body;
+    }
+
     public static final class HttpRequestBuilder {
         private HttpMethod method;
         private String URL;
@@ -43,6 +47,7 @@ public class HttpRequest {
         private Map<String, String> parameters;
         private Map<String, String> headers;
         private String body;
+
 
         private HttpRequestBuilder() {
         }
