@@ -89,10 +89,7 @@ public class RequestHandler implements Runnable {
             System.out.println(httpResponse);
 
             DataOutputStream dos = new DataOutputStream(out);
-            dos.writeBytes(httpResponse.toString());
-            if(httpResponse.getBody() != null){
-                dos.write(httpResponse.getBody());
-            }
+            dos.write(httpResponse.toBytes());
             dos.flush();
 
         } catch (IOException e) {

@@ -93,9 +93,6 @@ public class HttpResponse {
             }
         }
         sb.append("\r\n");
-        if(body != null) {
-            sb.append(new String(body, StandardCharsets.US_ASCII));
-        }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         outputStream.write(sb.toString().getBytes());
         if(body != null) {
