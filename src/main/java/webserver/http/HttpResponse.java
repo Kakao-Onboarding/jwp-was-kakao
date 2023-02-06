@@ -1,5 +1,8 @@
 package webserver.http;
 
+import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 public class HttpResponse {
@@ -65,5 +68,40 @@ public class HttpResponse {
             httpResponse.status = this.status;
             return httpResponse;
         }
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(version).append(" ").append(status.getCode()).append(" ").append(status.name()).append(" \r\n");
+        if (headers!=null && !headers.isEmpty()) {
+            for (String key : headers.keySet()) {
+                sb.append(key).append(": ").append(headers.get(key)).append(" \r\n");
+            }
+        }
+        sb.append("\r\n");
+
+        return sb.toString();
+    }
+
+    public byte[] toBytes() throws IOException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(version).append(" ").append(status.getCode()).append(" ").append(status.name()).append(" \r\n");
+        if (headers!=null && !headers.isEmpty()) {
+            for (String key : headers.keySet()) {
+                sb.append(key).append(": ").append(headers.get(key)).append(" \r\n");
+            }
+        }
+        sb.append("\r\n");
+        if(body != null) {
+            sb.append(new String(body, StandardCharsets.US_ASCII));
+        }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        outputStream.write(sb.toString().getBytes());
+        if(body != null) {
+            outputStream.write(body);
+        }
+        byte[] response = outputStream.toByteArray();
+        return response;
     }
 }

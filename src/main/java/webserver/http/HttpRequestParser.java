@@ -26,7 +26,7 @@ public class HttpRequestParser {
     }
 
     private void parseBody(String request){
-        String[] splited = request.split("\n\n");
+        String[] splited = request.split("\r\n\r\n");
         if (splited.length > 1){
             this.body = splited[1];
         }
@@ -34,7 +34,7 @@ public class HttpRequestParser {
     }
 
     private void parseHeader(String headerString){
-        String[] splited = headerString.split("\n");
+        String[] splited = headerString.split("\r\n");
         parseStartLine(splited[0]);
         this.headers = new HashMap<>();
         for (int i = 1; i < splited.length ; i ++){
@@ -64,7 +64,7 @@ public class HttpRequestParser {
     private void parseParameter(String parameterString){
         String[] splited = parameterString.split("&");
         this.parameters = new HashMap<>();
-        for (int i = 1; i < splited.length ; i ++){
+        for (int i = 0; i < splited.length ; i ++){
             String[] keyValue = splited[i].split("=");
             String key = keyValue[0];
             String value = keyValue[1];
