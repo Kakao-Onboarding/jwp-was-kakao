@@ -2,7 +2,7 @@ package webserver;
 
 public class BaseHandler implements Handler {
     @Override
-    public byte[] apply(Request request) {
-        return "Hello world".getBytes();
+    public Response apply(Request request) {
+        return Response.ok("Hello world".getBytes(), request.findRequestedFileType());
     }
 }

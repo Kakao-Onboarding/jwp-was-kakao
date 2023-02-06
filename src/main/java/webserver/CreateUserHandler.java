@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class CreateUserHandler implements Handler {
     @Override
-    public byte[] apply(Request request) {
+    public Response apply(Request request) {
         Map<String, String> queryString = request.getRequestBody();
         User user = new User(
                 queryString.get("userId"),
@@ -16,6 +16,6 @@ public class CreateUserHandler implements Handler {
                 queryString.get("email")
         );
         DataBase.addUser(user);
-        return new byte[0];
+        return Response.found(new byte[0], request.findRequestedFileType(), "/index.html");
     }
 }

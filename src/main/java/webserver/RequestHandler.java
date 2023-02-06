@@ -15,7 +15,7 @@ import java.util.Objects;
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
-    private Socket connection;
+    private final Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
@@ -30,48 +30,26 @@ public class RequestHandler implements Runnable {
                 OutputStream out = connection.getOutputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in))
              ) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
             Request request = Request.parse(reader);
-
-            FileType fileType = request.findRequestedFileType();
-            byte[] body = findResponseByPath(request, fileType);
-
-            DataOutputStream dos = new DataOutputStream(out);
-            response200Header(dos, body.length, fileType);
-            responseBody(dos, body);
+            Response response = findResponseByPath(request);
+            response.flush(new DataOutputStream(out));
         } catch (IOException | URISyntaxException e) {
             logger.error(e.getMessage());
         }
     }
 
-    private byte[] findResponseByPath(Request request, FileType fileType) throws IOException, URISyntaxException {
+    private Response findResponseByPath(Request request) throws IOException, URISyntaxException {
         String path = request.getPath();
+        FileType fileType = request.findRequestedFileType();
+
         if (fileType == FileType.HTML || fileType == FileType.ICO) {
-            return FileIoUtils.loadFileFromClasspath("./templates" + path);
+            return Response.ok(FileIoUtils.loadFileFromClasspath("./templates" + path), fileType);
         }
+
         if (fileType == FileType.CSS || fileType == FileType.JS || fileType.isFont()) {
-            return FileIoUtils.loadFileFromClasspath("./static" + path);
+            return Response.ok(FileIoUtils.loadFileFromClasspath("./static" + path), fileType);
         }
+
         return HandlerMapping.handle(request);
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent, FileType fileType) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: " + fileType.getContentType() + ";charset=utf-8 \r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + " \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
     }
 }

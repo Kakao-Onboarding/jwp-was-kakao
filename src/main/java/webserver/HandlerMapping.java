@@ -29,7 +29,7 @@ public enum HandlerMapping {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public static byte[] handle(Request request) {
+    public static Response handle(Request request) {
         HandlerMapping handlerMapping = findHandler(request);
         return handlerMapping.handler.apply(request);
     }
