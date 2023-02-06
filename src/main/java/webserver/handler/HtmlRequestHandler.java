@@ -9,12 +9,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class StaticResourceRequestHandler implements Handler {
-
+public class HtmlRequestHandler implements Handler {
     public HttpResponse handle(HttpRequest httpRequest) {
         byte[] bytes;
         try {
-            bytes = FileIoUtils.loadFileFromClasspath("./static" + httpRequest.getURL());
+            bytes = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getURL());
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -30,15 +29,7 @@ public class StaticResourceRequestHandler implements Handler {
     private Map<String, String> generateHeaders(HttpRequest httpRequest, byte[] body) {
         Map<String, String> headers = new LinkedHashMap<>();
 
-        String url = httpRequest.getURL();
-        if (url.endsWith(".js")) {
-            headers.put("Content-Type", "text/javascript;charset=utf-8");
-        } else if (url.endsWith(".css")) {
-            headers.put("Content-Type", "text/css;charset=utf-8");
-        } else {
-            headers.put("Content-Type", "text/html;charset=utf-8");
-        }
-
+        headers.put("Content-Type", "text/html;charset=utf-8");
         headers.put("Content-Length", String.valueOf(body.length));
 
         return headers;
