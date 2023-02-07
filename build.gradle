@@ -21,11 +21,20 @@ ext {
 }
 
 dependencies {
-    implementation 'ch.qos.logback:logback-classic:1.4.5'
     implementation 'com.github.jknack:handlebars:4.3.1'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation 'org.assertj:assertj-core:3.23.1'
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.5'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 test {

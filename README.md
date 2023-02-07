@@ -7,3 +7,14 @@
 
 ## 온라인 코드 리뷰 과정
 * [텍스트와 이미지로 살펴보는 온라인 코드 리뷰 과정](https://github.com/next-step/nextstep-docs/tree/master/codereview)
+
+## 기능 요구사항
+- GET /index.html 응답하기
+  - http://localhost:8080/index.html 에 접근할 수 있도록 구현한다.
+- CSS 지원하기
+  - 인덱스 페이지에서 stylesheet 파일을 지원하도록 구현한다
+- POST 방식으로 회원가입
+  - http://localhost:8080/user/form.html 에서 회원가입 기능이 정상적으로 동작하도록 구현한다.
+- Redirect
+  - 회원가입을 완료 후 index.html로 이동하도록 구현한다.
+  - HTTP 응답 헤더의 status code를 302 code를 사용한다.
