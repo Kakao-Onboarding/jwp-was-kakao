@@ -2,54 +2,90 @@ package webserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.IOUtils;
+import webserver.handler.Handler;
+import webserver.http.*;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.util.*;
 
 public class RequestHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 
     private Socket connection;
+    private final Map<String, Handler> urlHandlerMapping;
+    private final List<Handler> defaultHandlerMapping;
 
-    public RequestHandler(Socket connectionSocket) {
+    public RequestHandler(Socket connectionSocket, Map<String, Handler> urlHandlerMapping, List<Handler> defaultHandlerMapping) {
         this.connection = connectionSocket;
+        this.urlHandlerMapping = urlHandlerMapping;
+        this.defaultHandlerMapping = defaultHandlerMapping;
     }
 
     public void run() {
         logger.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
                 connection.getPort());
-
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            // TODO 사용자 요청에 대한 처리는 이 곳에 구현하면 된다.
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+            HttpRequest request = getHttpRequest(br);
+            if (request == null) {
+                return;
+            }
+
+            HttpResponse httpResponse = getHttpResponse(request);
+
+            System.out.println(httpResponse);
+
             DataOutputStream dos = new DataOutputStream(out);
-            byte[] body = "Hello world".getBytes();
-            response200Header(dos, body.length);
-            responseBody(dos, body);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8 \r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + " \r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
+            dos.write(httpResponse.toBytes());
             dos.flush();
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
+    }
+
+    private HttpResponse getHttpResponse(HttpRequest request) {
+        Handler urlHandler = urlHandlerMapping.get(request.getURL());
+        if (urlHandler != null) {
+            return urlHandler.handle(request);
+        }
+
+        for (Handler handler : defaultHandlerMapping) {
+            try {
+                return handler.handle(request);
+            } catch (Exception ignored) {}
+        }
+
+        return HttpResponse.HttpResponseBuilder.aHttpResponse()
+                .withStatus(HttpStatus.BAD_REQUEST)
+                .withVersion("HTTP/1.1")
+                .build();
+    }
+
+    private static HttpRequest getHttpRequest(BufferedReader br) throws IOException {
+        StringBuilder requestStringBuilder = new StringBuilder();
+
+        String line = br.readLine();
+        if (line == null) {
+            return null;
+        }
+
+        requestStringBuilder.append(line).append("\r\n");
+
+        while ((line = br.readLine()) != null && !"".equals(line)) {
+            requestStringBuilder.append(line).append("\r\n");
+        }
+        System.out.println(requestStringBuilder);
+        HttpRequest request = new HttpRequestParser().parse(requestStringBuilder.toString());
+
+        if (request.getMethod() == HttpMethod.POST || request.getMethod() == HttpMethod.PUT) {
+            String body = IOUtils.readData(br, Integer.parseInt(request.getHeaders().get("Content-Length")));
+            System.out.println(body);
+            request.setBody(body);
+        }
+        return request;
     }
 }
