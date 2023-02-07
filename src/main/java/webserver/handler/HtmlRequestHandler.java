@@ -5,7 +5,6 @@ import webserver.http.HttpRequest;
 import webserver.http.HttpResponse;
 import webserver.http.HttpStatus;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,7 +12,11 @@ public class HtmlRequestHandler implements Handler {
     public HttpResponse handle(HttpRequest httpRequest) {
         byte[] bytes;
         try {
-            bytes = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getURL());
+            if(httpRequest.getURL().equals("/")){
+                bytes = "Hello World!".getBytes();
+            } else{
+                bytes = FileIoUtils.loadFileFromClasspath("./templates" + httpRequest.getURL());
+            }
         } catch (Exception e) {
             throw new RuntimeException();
         }
